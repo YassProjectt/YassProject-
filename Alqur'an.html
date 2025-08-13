@@ -32,7 +32,12 @@ header h1 {
   font-size: 2.5rem;
   color: var(--highlight);
   text-shadow: 0 0 10px rgba(0,255,200,0.6);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+#waktuSholat {
+  font-size: 1.3rem;
+  color: var(--highlight);
+  margin-bottom: 0.8rem;
 }
 .search-wrapper {
   display: flex;
@@ -157,6 +162,7 @@ header h1 {
 
 <header>
   <h1>Al-Qur'an Digital</h1>
+  <div id="waktuSholat">Memuat jadwal...</div>
   <div class="search-wrapper">
     <input type="text" class="search-bar" id="searchInput" placeholder="Cari surat..." oninput="filterSurah()" />
   </div>
@@ -188,6 +194,37 @@ window.onscroll = () => {
   document.getElementById("toTop").style.display = window.scrollY > 200 ? "block" : "none";
 };
 
+// === Waktu Sholat (Aladhan API) ===
+async function getWaktuSholat() {
+  try {
+    const res = await fetch("https://api.aladhan.com/v1/timingsByCity?city=Sukabumi&country=Indonesia&method=20");
+    const data = await res.json();
+    const timings = data.data.timings;
+
+    const list = [
+      `Subuh ${timings.Fajr}`,
+      `Dzuhur ${timings.Dhuhr}`,
+      `Ashar ${timings.Asr}`,
+      `Maghrib ${timings.Maghrib}`,
+      `Isya ${timings.Isha}`
+    ];
+
+    let idx = 0;
+    const el = document.getElementById("waktuSholat");
+    el.textContent = "⏰ " + list[idx];
+    setInterval(() => {
+      idx = (idx + 1) % list.length;
+      el.textContent = "⏰ " + list[idx];
+    }, 3000);
+
+  } catch (err) {
+    document.getElementById("waktuSholat").textContent = "Gagal memuat jadwal";
+    console.error(err);
+  }
+}
+getWaktuSholat();
+
+// === Quran Functions ===
 async function fetchAllSurahs() {
   const res = await fetch("https://api.quran.gading.dev/surah");
   const data = await res.json();
@@ -250,7 +287,7 @@ async function renderSurat(number, ayatIndex=null) {
     <section>
       <h2 style="color: var(--highlight); font-size: 1.5rem; border-bottom: 1px solid #444; padding-bottom: 0.5rem;">
         ${surat.number}. ${surat.name.transliteration.id}
-        <button style="float:right;background:var(--highlight);color:black;border:none;border-radius:8px;padding:0.3rem 0.6rem;cursor:pointer" onclick="tambahFavorit(${surat.number}, '${surat.name.transliteration.id}')">★</button>
+        <button style="float:right;background:var(--highlight);color:black;border:none;border-radius:8px;padding:0.3rem 0.6rem;cursor:pointer" onclick="tambahFavorit(event, ${surat.number}, '${surat.name.transliteration.id}')">★</button>
       </h2>
       <p class="latin">${surat.name.translation.id} - ${surat.revelation.id}</p>
       <button onclick="playAllAyat(${number})" style="background-color:#00ffc8;color:black;padding:0.5rem 1rem;border:none;border-radius:10px;cursor:pointer;margin:1rem 0;">▶ Play Surat</button>
@@ -298,12 +335,17 @@ async function playAllAyat(number) {
     }
   };
 }
-function tambahFavorit(num, name) {
-  if (!favoritList.find(f => f.num === num)) {
+function tambahFavorit(e, num, name) {
+  e.stopPropagation();
+  const index = favoritList.findIndex(f => f.num === num);
+  if (index === -1) {
     favoritList.push({ num, name });
-    localStorage.setItem("favoritSurat", JSON.stringify(favoritList));
     alert("Ditambahkan ke favorit!");
+  } else {
+    favoritList.splice(index, 1);
+    alert("Dihapus dari favorit!");
   }
+  localStorage.setItem("favoritSurat", JSON.stringify(favoritList));
 }
 function showFavorit() {
   const container = document.getElementById("quranContent");
