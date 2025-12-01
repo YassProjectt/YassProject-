@@ -159,6 +159,9 @@
 
     <!-- FAQ -->
     <div class="faq">
+ <div class="q">Jika sudah selesai?</div>
+      <div class="a">Tolong kirim ke gmail (opsional) wajib kirim ke WhatsApp ada tulisan bagikan ke email dan WhatsApp.</div>
+
       <div class="q">Berapa lama pembayaran diverifikasi?</div>
       <div class="a">Verifikasi manual biasanya 1–24 jam kerja, tergantung bukti & jam operasional.</div>
 
@@ -469,7 +472,7 @@ btnShareWA.addEventListener('click', ()=>{
 /* prepare email (mailto) - user must attach image manually */
 btnMail.addEventListener('click', ()=>{
   const to = el('#email').value || '';
-  const cs = 'admin@example.com'; // placeholder admin email (user can edit if want real)
+  const cs = 'yazxpc@gmail.com'; // placeholder admin email (user can edit if want real)
   const subject = encodeURIComponent(`Konfirmasi Pembayaran - Invoice ${el('#invoice').textContent || genInvoice()}`);
   const body = encodeURIComponent(`Halo,\nSaya sudah melakukan transfer.\nInvoice: ${el('#invoice').textContent || genInvoice()}\nNama: ${el('#name').value}\nNominal: ${el('#amount').value}\nMohon verifikasi. Silakan lampirkan file bukti (attach file).`);
   // open mailto to admin (we'll open to admin email and cc user email)
@@ -493,7 +496,7 @@ btnSubmitBukti.addEventListener('click', async ()=>{
   };
   receipts.push(payload);
   localStorage.setItem('submitedReceipts', JSON.stringify(receipts));
-  showToast('Bukti disimpan lokal & siap diverifikasi (demo)');
+  showToast('Bukti disimpan lokal & siap diverifikasi ');
   // show success modal/pop-up
   alert('Terima kasih! Bukti pembayaran tersubmit (disimpan lokal). Silakan kirim juga ke Admin/CS jika perlu.');
 });
