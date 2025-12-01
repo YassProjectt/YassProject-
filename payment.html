@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Payment YAZXOFFICIALL — Full</title>
+
+<!-- html2canvas CDN for snapshot/download -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<style>
+  :root{
+    --bg:#071024; --panel:#0f1724; --muted:#9ca3af; --accent:#06b6d4;
+    --accent-2:#0ea5a5; --glass:rgba(255,255,255,0.03); --text:#e6eef6;
+    --success:#10b981; --danger:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; font-family:Inter,system-ui,Arial;
+    background:linear-gradient(180deg,var(--bg) 0%, #051023 100%); color:var(--text);
+  }
+
+  /* thin blue fog (kabut) */
+  body::before, body::after{
+    content:"";position:fixed;pointer-events:none;z-index:0;mix-blend-mode:screen;filter:blur(40px) saturate(120%);opacity:0.35;
+  }
+  body::before{width:520px;height:340px;right:-80px;top:-40px;background:radial-gradient(closest-side, rgba(6,182,212,0.18), rgba(6,182,212,0.02) 60%, transparent 70%);}
+  body::after{width:420px;height:260px;left:-120px;bottom:-20px;background:radial-gradient(closest-side, rgba(59,130,246,0.12), rgba(59,130,246,0.02) 60%, transparent 70%);}
+
+  .wrap{max-width:1100px;margin:28px auto;padding:18px;display:grid;grid-template-columns:1fr 380px;gap:24px;position:relative;z-index:1}
+  @media (max-width:980px){.wrap{grid-template-columns:1fr; padding:14px}}
+
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 14px 40px rgba(2,6,23,0.6)}
+  header h1{margin:0;font-size:20px}
+  header p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+  label{display:block;font-size:13px;color:var(--muted);margin-top:12px}
+  input, select, textarea, button{font-family:inherit}
+  input, select, textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;outline:none}
+  input:focus, select:focus, textarea:focus{box-shadow:0 10px 30px rgba(6,182,212,0.06);border-color:rgba(6,182,212,0.28)}
+
+  .row{display:flex;gap:12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#042027;font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+  .small{font-size:13px;color:var(--muted)}
+
+  .summary h3{margin:0 0 8px 0}
+  .price{font-size:24px;font-weight:700}
+  .muted{color:var(--muted)}
+
+  /* modal popup */
+  .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:999}
+  .modal{width:92%;max-width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 12px 40px rgba(2,6,23,0.6);transform:translateY(14px);opacity:0;transition:all .26s}
+  .modal.open{transform:none;opacity:1}
+  .modal h2{margin:0 0 8px}
+
+  .copy-line{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;margin-top:8px}
+  .copy-btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;padding:8px 10px;border-radius:8px;cursor:pointer;color:#042027;font-weight:700}
+
+  /* toast */
+  .toast{position:fixed;right:20px;bottom:20px;background:#0f1724;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 35px rgba(2,6,23,0.6);opacity:0;transform:translateY(8px);transition:all .26s;z-index:1001}
+  .toast.show{opacity:1;transform:none}
+
+  /* receipt */
+  #receipt-area .receipt{background:#0b1220;padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);margin-top:16px}
+  .receipt h3{margin:0 0 6px}
+
+  /* faq */
+  .faq{margin-top:14px}
+  .faq .q{font-weight:700;color:#93c5fd;margin-top:10px}
+  .faq .a{color:var(--muted);margin-top:6px}
+
+  /* support */
+  .support{margin-top:16px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+  .support .num{font-weight:700}
+
+  /* toggle */
+  .toggle{display:flex;align-items:center;gap:8px}
+
+  /* logos small */
+  .logo{width:28px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;margin-right:8px;font-size:14px}
+
+  /* small screens */
+  @media (max-width:980px){
+    .row{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- LEFT: Form -->
+  <section class="panel" aria-labelledby="title">
+    <header><h1 id="title">Checkout — Demo Payment</h1><p class="small">Isi data lalu klik Bayar Sekarang untuk melihat metode & instruksi.</p></header>
+
+    <form id="payment-form" novalidate>
+      <label for="name">Nama Lengkap</label>
+      <input id="name" name="name" type="text" placeholder="Nama Pembeli" required>
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="email@domain.com" required>
+
+      <div class="row">
+        <div style="flex:1">
+          <label for="amount">Jumlah (IDR)</label>
+          <input id="amount" name="amount" type="number" min="1" value="50000" required>
+        </div>
+        <div style="width:140px">
+          <label for="currency">Mata Uang</label>
+          <select id="currency" name="currency"><option value="IDR">IDR</option><option value="USD">USD</option></select>
+        </div>
+      </div>
+
+      <label for="method">Pilih Metode Pembayaran</label>
+      <select id="method" name="method" required>
+        <option value="">— Pilih —</option>
+        <option value="qris">QRIS (Scan)</option>
+        <option value="dana">Dana</option>
+        <option value="gopay">GoPay</option>
+        <option value="shopee">ShopeePay</option>
+        <option value="seabank">SeaBank (Transfer)</option>
+      </select>
+
+      <label for="timer">Durasi Pembayaran</label>
+      <select id="timer" name="timer">
+        <option value="30m">30 menit</option>
+        <option value="1h">1 jam</option>
+        <option value="12h">12 jam</option>
+        <option value="24h" selected>24 jam</option>
+      </select>
+
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn" type="button" id="payNow">Bayar Sekarang</button>
+        <button class="btn ghost" id="saveDraft" type="button">Simpan ke Local</button>
+        <div style="flex:1;display:flex;align-items:center;justify-content:flex-end">
+          <label class="toggle small"><input id="themeToggle" type="checkbox"> Light mode</label>
+        </div>
+      </div>
+
+      <p class="small" style="margin-top:10px">⚠ Setelah transfer, <strong>WAJIB</strong> screenshot bukti transfer dan upload/submit untuk verifikasi.</p>
+    </form>
+
+    <!-- Receipt area (after user confirms) -->
+    <div id="receipt-area" aria-live="polite"></div>
+
+    <!-- Upload area (visible after popup confirm) -->
+    <div id="upload-area" style="margin-top:12px;display:none">
+      <label>Upload Bukti Transfer (jpg/png)</label>
+      <input type="file" id="buktiFile" accept="image/*">
+      <div id="preview" style="margin-top:10px"></div>
+
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn" id="btnSubmitBukti" type="button">Kirim Bukti (Simpan & Notifikasi)</button>
+        <button class="btn ghost" id="btnDownloadBukti" type="button">Download Bukti</button>
+        <button class="btn ghost" id="btnShareWA" type="button">Bagikan ke WhatsApp</button>
+        <button class="btn ghost" id="btnMail" type="button">Siapkan Email</button>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq">
+      <div class="q">Berapa lama pembayaran diverifikasi?</div>
+      <div class="a">Verifikasi manual biasanya 1–24 jam kerja, tergantung bukti & jam operasional.</div>
+
+      <div class="q">Apakah pembayaran otomatis?</div>
+      <div class="a">Untuk transfer/e-wallet, verifikasi saat bukti diterima — tidak otomatis.</div>
+
+      <div class="q">Jika salah transfer bagaimana?</div>
+      <div class="a">Hubungi Admin/CS + lampirkan bukti transfer untuk proses koreksi.</div>
+    </div>
+
+    <!-- Security note -->
+    <p class="small" style="margin-top:12px;color:var(--muted)">🔒 Data pembayaran Anda aman — semua proses pada klien. Jika ingin penyimpanan server, harus ada backend.</p>
+  </section>
+
+  <!-- RIGHT: Summary / Pengumuman / Support -->
+  <aside class="panel summary" aria-labelledby="summary-title">
+    <h3 id="summary-title">Ringkasan Pesanan</h3>
+    <p class="small muted">Produk: Donasi / Pembayaran</p>
+    <p class="price" id="displayAmount">IDR 50.000</p>
+
+    <div class="muted small" style="margin-top:8px">
+      <strong>Invoice</strong>: <span id="invoice">—</span><br>
+      <strong>Waktu aktif pembayaran</strong>: <span id="timeLeft">—</span>
+    </div>
+
+    <div style="margin-top:12px" class="notice">
+      <strong>Mode Demo</strong>
+      <div class="small muted" style="margin-top:6px">Semua fungsi bersifat client-side (no backend).</div>
+    </div>
+
+    <div style="margin-top:14px">
+      <h4 class="small">Metode (Klik untuk copy)</h4>
+
+      <div class="copy-line">
+        <div><span class="logo" style="background:#06b6d4">D</span> DANA</div>
+        <div><button class="copy-btn" data-value="085705196657">085705196657</button></div>
+      </div>
+
+      <div class="copy-line">
+        <div><span class="logo" style="background:#0ea5a5">G</span> GoPay</div>
+        <div><button class="copy-btn" data-value="085723956572">085723956572</button></div>
+      </div>
+
+      <div class="copy-line">
+        <div><span class="logo" style="background:#ff5722">S</span> ShopeePay</div>
+        <div><button class="copy-btn" data-value="083194078921">083194078921</button></div>
+      </div>
+
+      <div class="copy-line">
+        <div><span class="logo" style="background:#0ea5a5">SB</span> SeaBank</div>
+        <div><button class="copy-btn" data-value="901937267445">901937267445</button></div>
+      </div>
+    </div>
+
+    <div class="support" style="margin-top:14px">
+      <div style="font-size:14px;color:#93c5fd;font-weight:700">Customer Support</div>
+      <div style="margin-top:8px">Jika kesulitan, hubungi:</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <div><span class="num">+62 857 2395 6572</span><div class="small muted">(WhatsApp)</div></div>
+        <div><button class="copy-btn" id="copyCSBtn">Copy</button></div>
+      </div>
+      <div style="margin-top:8px" class="small muted">Jika tidak ada respon, coba ulang kirim bukti atau gunakan opsi download.</div>
+    </div>
+  </aside>
+</div>
+
+<!-- Modal popup untuk metode -->
+<div class="modal-bg" id="modalBg" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h2 id="mTitle">PAYMENT YAZXOFFICIALL</h2>
+    <div id="modalContent"></div>
+
+    <p style="color:#facc15;margin-top:10px;text-align:center">📌 <strong>WAJIB</strong> screenshot bukti transfer & upload bukti di halaman ini.</p>
+
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn" id="btnConfirmPay">Saya Sudah Transfer</button>
+      <button class="btn ghost" id="btnCloseModal">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- Helper & state ---------- */
+const el = s => document.querySelector(s);
+const elt = (s, ctx=document) => ctx.querySelector(s);
+const toast = el('#toast');
+
+function showToast(msg, t=2000){
+  toast.textContent = msg; toast.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>toast.classList.remove('show'), t);
+}
+
+function genInvoice(){
+  return 'YAZX-'+Date.now().toString().slice(-8);
+}
+
+function parseTimerValue(v){
+  if(v.endsWith('m')) return Number(v.slice(0,-1))*60; // minutes->seconds
+  if(v.endsWith('h')) return Number(v.slice(0,-1))*3600;
+  return 24*3600;
+}
+
+/* ---------- Init UI values ---------- */
+const amountInput = el('#amount');
+const currency = el('#currency');
+const displayAmount = el('#displayAmount');
+const invoiceEl = el('#invoice');
+const timeLeftEl = el('#timeLeft');
+const methodSel = el('#method');
+const timerSel = el('#timer');
+
+function updateDisplay(){
+  const amt = Number(amountInput.value) || 0;
+  displayAmount.textContent = (currency.value==='IDR' ? 'IDR ' + amt.toLocaleString('id-ID') : currency.value + ' ' + amt.toFixed(2));
+}
+amountInput.addEventListener('input', updateDisplay);
+currency.addEventListener('change', updateDisplay);
+updateDisplay();
+
+/* ---------- Copy buttons ---------- */
+document.querySelectorAll('.copy-btn[data-value]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{ navigator.clipboard.writeText(btn.dataset.value); showToast('Nomor disalin'); });
+});
+el('#copyCSBtn').addEventListener('click', ()=>{ navigator.clipboard.writeText('6285723956572'); showToast('Nomor CS disalin'); });
+
+/* ---------- Local storage save/load (draft) ---------- */
+el('#saveDraft').addEventListener('click', ()=>{
+  const data = {
+    name: el('#name').value,
+    email: el('#email').value,
+    amount: el('#amount').value,
+    currency: el('#currency').value,
+    method: el('#method').value
+  };
+  localStorage.setItem('paymentDraft', JSON.stringify(data));
+  showToast('Draft disimpan di browser');
+});
+(function loadDraft(){
+  try{
+    const d = JSON.parse(localStorage.getItem('paymentDraft')||'{}');
+    if(d.name) el('#name').value=d.name;
+    if(d.email) el('#email').value=d.email;
+    if(d.amount) el('#amount').value=d.amount;
+    if(d.currency) el('#currency').value=d.currency;
+    if(d.method) el('#method').value=d.method;
+    updateDisplay();
+  }catch(e){}
+})();
+
+/* ---------- Theme toggle ---------- */
+el('#themeToggle').addEventListener('change', (e)=>{
+  if(e.target.checked){
+    document.documentElement.style.setProperty('--bg','#f8fafc');
+    document.documentElement.style.setProperty('--panel','#ffffff');
+    document.documentElement.style.setProperty('--text','#0b1220');
+    document.documentElement.style.setProperty('--muted','#475569');
+  } else {
+    document.documentElement.style.setProperty('--bg','#071024');
+    document.documentElement.style.setProperty('--panel','#0f1724');
+    document.documentElement.style.setProperty('--text','#e6eef6');
+    document.documentElement.style.setProperty('--muted','#9ca3af');
+  }
+});
+
+/* ---------- Timer logic ---------- */
+let countdownInterval = null;
+function startTimer(seconds){
+  clearInterval(countdownInterval);
+  let remain = seconds;
+  function fmt(s){
+    const h = Math.floor(s/3600); const m = Math.floor((s%3600)/60); const sec = s%60;
+    return (h>0?h+'h ':'') + (m>0?m+'m ':'') + sec+'s';
+  }
+  timeLeftEl.textContent = fmt(remain);
+  countdownInterval = setInterval(()=>{
+    remain--;
+    if(remain<=0){ clearInterval(countdownInterval); timeLeftEl.textContent = 'EXPIRED'; onTimerExpired(); }
+    else timeLeftEl.textContent = fmt(remain);
+  },1000);
+}
+function onTimerExpired(){
+  // mark invoice expired
+  el('#invoice').textContent = 'EXPIRED';
+  showToast('Waktu pembayaran habis — pesanan dianggap batal');
+}
+
+/* ---------- Modal handling & payment flow ---------- */
+const modalBg = el('#modalBg'), modal = el('.modal');
+el('#payNow').addEventListener('click', ()=>{
+  // validation
+  const name = el('#name').value.trim();
+  const email = el('#email').value.trim();
+  const amount = el('#amount').value.trim();
+  const method = el('#method').value;
+  if(!name || !email || !amount || !method){ alert('Mohon lengkapi semua data (nama, email, jumlah, metode).'); return; }
+  // basic email validation
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ alert('Format email tidak valid'); return; }
+  if(Number(amount)<=0){ alert('Jumlah harus lebih besar dari 0'); return; }
+
+  // generate invoice & timer
+  const invoice = genInvoice();
+  invoiceEl.textContent = invoice;
+  const seconds = parseTimerValue(timerSel.value);
+  startTimer(seconds);
+
+  // build modal content based on method
+  const mc = el('#modalContent'); mc.innerHTML='';
+  if(method==='qris'){
+    mc.innerHTML = `<h3 style="margin:6px 0;color:var(--muted)">QRISS</h3>
+      <img src="https://files.catbox.moe/uhiz0w.jpg" alt="QRIS" style="width:100%;border-radius:10px"> 
+      <p class="small" style="margin-top:8px;color:var(--muted)">LINK DI BAWAH QRIS ALL PAYMENT</p>`;
+  } else {
+    const accounts = {dana:'085705196657', gopay:'085723956572', shopee:'083194078921', seabank:'901937267445'};
+    const label = method.toUpperCase();
+    const num = accounts[method] || '—';
+    mc.innerHTML = `<div class="copy-line"><div><strong>${label}</strong><div class="small muted">A/N SUTISNA</div></div>
+      <div><button class="copy-btn" data-value="${num}">${num}</button></div></div>`;
+    // attach inline copy handler
+    setTimeout(()=>{ document.querySelectorAll('.copy-btn[data-value]').forEach(b=>b.addEventListener('click', ()=>{ navigator.clipboard.writeText(b.dataset.value); showToast('Nomor disalin'); })); },50);
+  }
+
+  // show modal
+  modalBg.style.display='flex'; setTimeout(()=>modal.classList.add('open'),10);
+});
+
+/* close modal */
+el('#btnCloseModal').addEventListener('click', ()=>{
+  modal.classList.remove('open'); setTimeout(()=>modalBg.style.display='none',220);
+});
+
+/* confirm transfer (user already transfer) -> show receipt & enable upload area */
+el('#btnConfirmPay').addEventListener('click', ()=>{
+  modal.classList.remove('open'); setTimeout(()=>modalBg.style.display='none',220);
+  // create receipt
+  createReceipt();
+  // show upload controls
+  el('#upload-area').style.display='block';
+  showToast('Silakan upload bukti transfer di bagian Upload Bukti');
+});
+
+/* ---------- Receipt creation ---------- */
+function createReceipt(){
+  const name = el('#name').value.trim(); const email = el('#email').value.trim();
+  const amount = Number(el('#amount').value)||0; const method = el('#method').value;
+  const inv = el('#invoice').textContent || genInvoice();
+  const time = new Date().toLocaleString('id-ID', {dateStyle:'full', timeStyle:'short'});
+  const html = `
+    <div class="receipt" id="receiptCard">
+      <h3>📘 STRUK PEMBAYARAN</h3>
+      <div><strong>Invoice:</strong> ${inv}</div>
+      <div><strong>Nama:</strong> ${escapeHtml(name)}</div>
+      <div><strong>Email:</strong> ${escapeHtml(email)}</div>
+      <div><strong>Metode:</strong> ${method.toUpperCase()}</div>
+      <div><strong>Jumlah:</strong> IDR ${amount.toLocaleString('id-ID')}</div>
+      <div><strong>Waktu:</strong> ${time}</div>
+      <div style="margin-top:8px;padding:10px;background:rgba(14,165,233,0.06);border-radius:8px;color:#93c5fd">
+        📌 NOTE: Screenshot bukti transfer dan upload untuk verifikasi.
+      </div>
+      <div style="margin-top:10px;color:var(--success);font-weight:700">Status: ✔ SUDAH MEMBAYAR</div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button id="downloadReceiptBtn" class="btn">Download Struk</button>
+        <button id="copyReceiptBtn" class="btn ghost">Copy Teks</button>
+      </div>
+    </div>`;
+  el('#receipt-area').innerHTML = html;
+
+  // attach handlers
+  el('#downloadReceiptBtn').addEventListener('click', downloadReceiptAsImage);
+  el('#copyReceiptBtn').addEventListener('click', copyReceiptText);
+}
+
+/* ---------- upload file handling ---------- */
+const fileInput = el('#buktiFile'), preview = el('#preview'), btnDownloadBukti = el('#btnDownloadBukti'), btnShareWA = el('#btnShareWA'), btnMail = el('#btnMail'), btnSubmitBukti = el('#btnSubmitBukti');
+
+let currentFile = null;
+fileInput.addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  if(!f.type.startsWith('image/')){ alert('File harus gambar (jpg/png)'); return; }
+  currentFile = f;
+  const reader = new FileReader();
+  reader.onload = ()=>{ preview.innerHTML = `<img src="${reader.result}" style="max-width:100%;border-radius:10px">`; };
+  reader.readAsDataURL(f);
+  // enable download
+  btnDownloadBukti.disabled = false; btnShareWA.disabled=false; btnMail.disabled=false;
+});
+
+/* download bukti (save as file) */
+btnDownloadBukti.addEventListener('click', ()=>{
+  if(!currentFile){ alert('Belum ada file bukti'); return; }
+  const url = URL.createObjectURL(currentFile);
+  const a = document.createElement('a'); a.href=url; a.download = `bukti_${Date.now()}.jpg`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  showToast('Bukti diunduh ke device');
+});
+
+/* share via WhatsApp - open chat with prefilled message (user must attach image manually) */
+btnShareWA.addEventListener('click', ()=>{
+  if(!currentFile){ alert('Belum ada file bukti'); return; }
+  const csNumber = '6285723956572';
+  const inv = el('#invoice').textContent || genInvoice();
+  const msg = encodeURIComponent(`Saya sudah transfer.\nInvoice: ${inv}\nNama: ${el('#name').value}\nNominal: ${el('#amount').value}\nMohon verifikasi. (Saya lampirkan screenshot bukti)`);
+  window.open(`https://wa.me/${csNumber}?text=${msg}`, '_blank');
+});
+
+/* prepare email (mailto) - user must attach image manually */
+btnMail.addEventListener('click', ()=>{
+  const to = el('#email').value || '';
+  const cs = 'admin@example.com'; // placeholder admin email (user can edit if want real)
+  const subject = encodeURIComponent(`Konfirmasi Pembayaran - Invoice ${el('#invoice').textContent || genInvoice()}`);
+  const body = encodeURIComponent(`Halo,\nSaya sudah melakukan transfer.\nInvoice: ${el('#invoice').textContent || genInvoice()}\nNama: ${el('#name').value}\nNominal: ${el('#amount').value}\nMohon verifikasi. Silakan lampirkan file bukti (attach file).`);
+  // open mailto to admin (we'll open to admin email and cc user email)
+  window.location.href = `mailto:${cs}?subject=${subject}&body=${body}`;
+});
+
+/* submit bukti - we will save metadata+image to localStorage and show success toast/modal */
+btnSubmitBukti.addEventListener('click', async ()=>{
+  if(!currentFile){ alert('Pilih file bukti terlebih dahulu'); return; }
+  // convert to base64 (store temporarily in localStorage)
+  const base64 = await fileToBase64(currentFile);
+  const receipts = JSON.parse(localStorage.getItem('submitedReceipts')||'[]');
+  const payload = {
+    invoice: el('#invoice').textContent || genInvoice(),
+    name: el('#name').value,
+    email: el('#email').value,
+    amount: el('#amount').value,
+    method: el('#method').value,
+    time: new Date().toISOString(),
+    fileBase64: base64
+  };
+  receipts.push(payload);
+  localStorage.setItem('submitedReceipts', JSON.stringify(receipts));
+  showToast('Bukti disimpan lokal & siap diverifikasi (demo)');
+  // show success modal/pop-up
+  alert('Terima kasih! Bukti pembayaran tersubmit (disimpan lokal). Silakan kirim juga ke Admin/CS jika perlu.');
+});
+
+/* ---------- utilities ---------- */
+function fileToBase64(file){ return new Promise((res, rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+
+function downloadReceiptAsImage(){
+  const node = el('#receiptCard');
+  if(!node){ alert('Belum ada struk'); return; }
+  html2canvas(node, {scale:2}).then(canvas=>{
+    const link = document.createElement('a'); link.download = `${el('#invoice').textContent || 'receipt'}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+    showToast('Struk diunduh sebagai gambar');
+  }).catch(()=>alert('Gagal membuat gambar struk'));
+}
+
+function copyReceiptText(){
+  const r = el('#receiptCard');
+  if(!r){ alert('Belum ada struk'); return; }
+  // collect text
+  const txt = Array.from(r.querySelectorAll('div')).map(d=>d.textContent.trim()).join('\n');
+  navigator.clipboard.writeText(txt); showToast('Teks struk disalin');
+}
+
+/* ---------- Timer expiry behavior already handled earlier ---------- */
+
+/* ---------- small utility escape ---------- */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- provide convenience: download all stored receipts as JSON ---------- */
+window.addEventListener('keydown', (e)=>{ if(e.ctrlKey && e.key==='d'){ downloadStoredReceipts(); }});
+function downloadStoredReceipts(){
+  const data = localStorage.getItem('submitedReceipts') || '[]';
+  const blob = new Blob([data], {type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='receipts_local.json'; a.click(); URL.revokeObjectURL(a.href);
+  showToast('Stored receipts downloaded');
+}
+
+/* ---------- prevent accidental errors ---------- */
+window.addEventListener('error', (e)=>{ console.warn('Client error:', e.message); });
+
+</script>
+</body>
+</html>
